@@ -3,6 +3,7 @@ import home from "@/components/home";
 import login from "@/components/login_lw";
 import about from "@/components/about";
 import personal from "@/components/personal_lw";
+import register_lw from "@/components/register_lw";
 import super_login from "@/components/backFace";
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
         path: '/SuperAdmin_Login',
         name: 'superLogin',
         component: super_login
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: register_lw
     },
 
 ]

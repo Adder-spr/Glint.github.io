@@ -80,14 +80,16 @@
             </template>
             <div>{{ now }}</div>
           </el-card>
-          <el-calendar style="background: #6b778c">
-            <template #date-cell="{ data }">
-              <p :class="data.isSelected ? 'is-selected' : ''">
-                {{ data.day.split('-').slice(1).join('-') }}
-                {{ data.isSelected ? '✔️' : '' }}
-              </p>
-            </template>
-          </el-calendar>
+          <el-config-provider :locale="locale">
+            <el-calendar style="background: #6b778c">
+              <template #date-cell="{ data }">
+                <p :class="data.isSelected ? 'is-selected' : ''">
+                  {{ data.day.split('-').slice(1).join('-') }}
+                  {{ data.isSelected ? '✔️' : '' }}
+                </p>
+              </template>
+            </el-calendar>
+          </el-config-provider>
           <el-descriptions
               title="Thanks To The Creators"
               direction="vertical"
@@ -110,37 +112,40 @@
         </el-aside>
         <el-main style="background: #acb7ce;width: 100%;">
           <el-carousel :interval="4000" type="card" height="390px">
-            <el-carousel-item v-for="item in 3" :key="item" >
+            <el-carousel-item v-for="item in 3" :key="item">
             </el-carousel-item>
           </el-carousel>
           <el-table :data="tableData" style="width: 100%;" max-height="411">
-            <el-table-column fixed prop="account" label="账号" style="width: 22%;" />
-            <el-table-column prop="age" label="年龄" style="width: 18%;" />
-            <el-table-column prop="location" label="居住地" style="width: 50%;" />
-            <el-table-column fixed="right" prop="sex" label="性别" style="width: 10%;" />
+            <el-table-column fixed prop="account" label="账号" style="width: 20%;"/>
+            <el-table-column prop="birthday" label="出生日期" style="width: 18%;"/>
+            <el-table-column prop="email" label="电子邮箱" style="width: 22%;"/>
+            <el-table-column prop="location" label="居住地" style="width: 30%;"/>
+            <el-table-column fixed="right" prop="sex" label="性别" style="width: 10%;"/>
           </el-table>
-<!--          <el-button class="mt-4" style="width: 100%" @click="onAddItem"-->
-<!--          >Add Item</el-button-->
-<!--          >-->
         </el-main>
       </el-container>
     </el-container>
-
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import router from "@/router/router";
+import {computed} from 'vue'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import en from 'element-plus/dist/locale/en.mjs'
 
 export default {
   name: "home_F",
-  data(){
-    return{
-      activeIndex:'Home',
-      isCollapse:true,
-      tableData:[],
-      now:"",
+  data() {
+    return {
+      activeIndex: 'Home',
+      isCollapse: true,
+      tableData: [],
+      now: "",
+      language: 'en',
+      locale: computed(() => (this.language === 'zh-cn' ? zhCn : en)),
+
     }
   },
   created() {
@@ -172,9 +177,15 @@ export default {
       }else if(key === "About"){
         this.About();
         console.log("About Coming");
-      }else if(key === "Home"){
+      }else if (key === "Home") {
         this.ToHome();
         console.log("Home Coming!");
+      } else if (key === "Chinese_Simplified") {
+        this.language = 'zh-cn';
+        console.log('zh-cn')
+      } else if (key === "English") {
+        this.language = 'en';
+        console.log('en')
       }
     },
     NowDetailData(){
@@ -190,6 +201,7 @@ export default {
       let data =  year + "-" + month + "-" + date + ": " + hours + "-" + minutes + "-" + second
       this.now = data;
     },1000)},
+
   }
 }
 

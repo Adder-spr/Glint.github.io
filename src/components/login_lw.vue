@@ -26,6 +26,9 @@
                 </el-link>
               </div>
             </el-card>
+            <div style="width: 100%;min-width: 600px;min-height: 400px;margin-top: 250px;">
+              <Chart type="bar" :data="chartData" :options="chartOptions"/>
+            </div>
           </el-main>
         </el-container>
         <el-aside width="45%" style="background: #ffffff;">
@@ -53,15 +56,22 @@
               <el-button type="success" style="margin-left: 5%;" @click="getCode">点击刷新</el-button>
             </div>
             <el-button type="primary" plain @click="showInfo" style="margin-top: 15px;width: 230px;">登录</el-button>
-
+            <el-button round style="margin-top: 15px;width: 230px;position: relative;right: 12px;" type="warning"
+                       @click="register">去注册
+            </el-button>
           </div>
         </el-aside>
       </el-container>
     </el-container>
+    <el-affix position="bottom" :offset="20">
+
+    </el-affix>
   </div>
 
 </template>
 
+<script setup>
+import Chart from "primevue/chart";</script>
 <script>
 import axios from "axios";
 import router from "../router/router";
@@ -72,7 +82,6 @@ export default {
   created() {
     this.getCode();
     this.getMustKnow();
-
   },
   data() {
     return {
@@ -83,6 +92,56 @@ export default {
       login_must_know: [],
       haveCode: true,
       login: false,
+      chartData: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          type: 'line',
+          label: '浏览人数占比',
+          borderColor: '#42A5F5',
+          borderWidth: 2,
+          fill: false,
+          data: [48, 27, 45, 51, 48, 46, 55]
+        }, {
+          type: 'bar',
+          label: '总收入',
+          backgroundColor: '#66BB6A',
+          data: [21, 74, 24, 45, 77, 45, 34],
+          borderColor: 'white',
+          borderWidth: 2
+        }, {
+          type: 'bar',
+          label: '支出',
+          backgroundColor: '#FFA726',
+          data: [47, 52, 74, 61, 54, 51, 55]
+        }]
+      },
+      chartOptions: {
+        plugins: {
+          legend: {
+            labels: {
+              color: '#495057'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: '#495057'
+            },
+            grid: {
+              color: '#ebedef'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#495057'
+            },
+            grid: {
+              color: '#ebedef'
+            }
+          }
+        }
+      },
 
     }
   },
@@ -166,11 +225,17 @@ export default {
         this.login_must_know = res.data;
       })
     },
-    SuperAdmin_Login(){
+    SuperAdmin_Login() {
       router.replace({
-        path:'/SuperAdmin_Login'
+        path: '/SuperAdmin_Login'
       })
     },
+    register() {
+      router.push({
+        path: '/register'
+      })
+    },
+
   }
 }
 </script>
@@ -201,4 +266,5 @@ export default {
   opacity: 0.65;
   border-radius: 5px;
 }
+
 </style>

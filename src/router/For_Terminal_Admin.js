@@ -75,7 +75,7 @@ export function all_login(IMinfo){
                                                     }else {
                                                         ElNotification({
                                                             title: '警告',
-                                                            message: '未授权操作！',
+                                                            message: '账号或密码错误！',
                                                             type: 'warning',
                                                         });
                                                     }

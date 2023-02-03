@@ -3,7 +3,11 @@ import home from "@/components/home";
 import login from "@/components/login_lw";
 import about from "@/components/about";
 import personal from "@/components/personal_lw";
-import super_login from "@/components/backFace";
+import register_lw from "@/components/register_lw";
+import Terminal from "@/components/backFace";
+import wait from '@/components/wait';
+import sendNotice from '@/components/LWSA_sendNotice';
+import iphone_face from '@/components/iphone_face';
 
 const routes = [
     {
@@ -12,7 +16,12 @@ const routes = [
         component: login,
     },
     {
-        path: '/home',
+        path: '/wait',
+        name: 'wait',
+        component: wait,
+    },
+    {
+        path: '/justtaCK',
         name: 'home',
         component: home,
     },
@@ -27,10 +36,25 @@ const routes = [
         component: about,
     },
     {
-        path: '/SuperAdmin_Login',
-        name: 'superLogin',
-        component: super_login
+        path: '/Terminal',
+        name: 'Terminal',
+        component: Terminal
     },
+    {
+        path: '/register',
+        name: 'register',
+        component: register_lw
+    },
+    {
+        path: '/superSendNotice',
+        name: 'sendNotice',
+        component: sendNotice
+    },
+    {
+        path: '/phone',
+        name: 'phone_login',
+        component: iphone_face
+    }
 
 ]
 

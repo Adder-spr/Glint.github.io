@@ -1,22 +1,22 @@
 <template>
   <div style="height: 100%;background: black;min-height: 150px;" v-loading="AdminLoginLead">
-    <div style="color: aqua;width: 100%;text-align: center;padding-top: 20px;"> 欢迎您! SuperAdmin </div>
+    <div style="color: aqua;width: 100%;text-align: center;padding-top: 20px;"> 欢迎您!</div>
     <Terminal welcomeMessage="welcome to back !"  :prompt="lead" style="padding-left: 15px;padding-top: 15px;font-size: 18px;background: #000000;color: rgba(255,255,255,0.63);height: 85%;" />
   </div>
 
 </template>
 
 <script setup>
-import Terminal from 'primevue/terminal';
-</script>
+import Terminal from 'primevue/terminal';</script>
 <script>
 import TerminalService from 'primevue/terminalservice';
 import {all_login} from "@/router/For_Terminal_Admin";
+
 export default {
   name: "SuperAdmin_Login",
-  data(){
+  data() {
     return {
-      lead:' user > ',
+      lead: ' user > ',
       AdminLoginLead: false,
 
     }

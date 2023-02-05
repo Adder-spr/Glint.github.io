@@ -37,8 +37,9 @@ export function all_login(IMinfo){
                                                             type: 'success',
                                                         });
                                                         let admin_t = setInterval(()=>{
+                                                            sessionStorage.setItem("Admin", IMinfo[2]);
                                                             router.replace({
-                                                                path: '/',
+                                                                path: '/admin_sendNotice',
                                                             }).then();
                                                             clearInterval(admin_t);
                                                         },1500);

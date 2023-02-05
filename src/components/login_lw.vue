@@ -15,7 +15,7 @@
           <el-card class="box-card">
             <div class="text item">
                 <span
-                    style="font-size: 20px;font-family:楷体,serif;font-weight: 600;flex-wrap: wrap;">Admin 登录须知：</span><br>
+                    style="font-size: 20px;font-family:楷体,serif;font-weight: 600;flex-wrap: wrap;">Admin 须知条款：</span><br>
               <el-link style="margin-left: 25px;margin-top: 5px;color: aqua;" v-for="(v,i) in login_must_know"
                        :key="i" :href="v.src">
                 <span>{{ v.info }}</span>
@@ -31,24 +31,20 @@
               v-loading="login"
               element-loading-text="Login..."
               style="width: 230px;height: 330px;position: relative;" ref="login_bod">
-            <el-input v-model="account" clearable>
-              <template #prepend>账号</template>
-            </el-input>
-            <el-input v-model="psd" type="password" show-password style="margin-top: 15px;" clearable>
-              <template #prepend>密码</template>
-            </el-input>
-            <el-input v-model="code" clearable style="margin-top: 15px;">
-              <template #prepend>验证码</template>
-            </el-input>
+            <el-input v-model="account" clearable :prefix-icon="User" placeholder="账号"></el-input>
+            <el-input v-model="psd" type="password" show-password style="margin-top: 15px;" :prefix-icon="Lock"
+                      clearable placeholder="密码"></el-input>
             <div style="margin-top: 15px;display: flex;flex-direction: row;">
-              <el-skeleton style="width: 240px" :loading="haveCode" animated>
-                <template #template>
-                  <el-skeleton-item style="width: 100%;height: 28px;"/>
-                </template>
-                <input v-model="NewCode" disabled class="code_center" onpaste="return false" oncopy="return false"
-                       oncut="return false" maxlength="11"/>
-              </el-skeleton>
-              <el-button type="success" style="margin-left: 5%;" @click="getCode">点击刷新</el-button>
+              <el-input v-model="code" :prefix-icon="Check" style="margin-right: 20px;" placeholder="验证码"></el-input>
+              <el-image v-loading="haveCode" style="width: 150px;border: 1px solid black;" :src="codeImage" alt="验证码"
+                        :fit="'scale-down'" @click="Code"></el-image>
+            </div>
+            <div style="display: flex;flex-direction: row;height: 15px;margin-bottom: 10px;">
+              <el-checkbox v-model="agree" size="default" style="margin-top: 1px;"></el-checkbox>
+              <span style="font-size: 10px;line-height: 35px;height: 15px;">我已阅读，并同意</span>
+              <el-link style="font-size: 7px;height: 15px;margin-top: 10px;margin-left: 3px;" :underline="false">Admin
+                须知条款
+              </el-link>
             </div>
             <el-button type="primary" plain @click="log_in" style="margin-top: 15px;width: 230px;">登录</el-button>
             <el-link href="/register" style="position:relative;left:78%;top: 5px;width: 37px;">
@@ -95,7 +91,8 @@
 </template>
 
 <script setup>
-import {Key, Right} from "@element-plus/icons-vue"</script>
+import {Check, Key, Lock, Right, User} from "@element-plus/icons-vue"</script>
+
 <script>
 import axios from "axios";
 import router from "../router/router";
@@ -104,7 +101,7 @@ import {ElNotification} from "element-plus";
 export default {
   name: "login_F",
   created() {
-    this.getCode();
+    this.Code();
     this.getMustKnow();
   },
   data() {
@@ -112,10 +109,12 @@ export default {
       account: "",
       psd: "",
       code: "",
-      NewCode: "",
-      login_must_know: [],
       haveCode: true,
+      login_must_know: [],
       login: false,
+      codeImage: '',
+      agree: false,
+
 
     }
   },
@@ -124,8 +123,9 @@ export default {
       router.replace({
         path: '/phone'
       })
+    } else {
+      sessionStorage.clear();
     }
-    sessionStorage.clear();
     this.Login_adoptScreen();
     window.onresize = () => {
       this.Login_adoptScreen();
@@ -133,8 +133,7 @@ export default {
   },
   methods: {
     whe_iphone() {
-      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
-      return flag;
+      return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
     },
     Login_adoptScreen() {
       let allHei = document.documentElement.clientHeight;
@@ -148,73 +147,95 @@ export default {
       this.login = true;
       let canSe = (this.account.indexOf('"') + this.account.indexOf("'") + this.account.indexOf('`') + this.psd.indexOf('"') + this.psd.indexOf("'") + this.psd.indexOf('`')) > -6;
       let times = setInterval(() => {
-        if (canSe) {
-          this.getCode();
+        if (!this.agree) {
+          ElNotification({
+            title: '提示',
+            message: '请勾选服务条款!',
+            type: 'info',
+          })
+        } else if (canSe) {
           ElNotification({
             title: '警告',
             message: '请规范输入!',
             type: 'warning',
           })
+          this.Code();
         } else if (this.account === '' || this.psd === '') {
           ElNotification({
             title: '提示',
             message: '请输入完整的登录信息!',
             type: 'warning'
           })
-        } else if (this.NewCode === this.code) {
+          this.Code();
+        } else {
           axios({
             url: '/lw/user/login',
             method: "post",
-            headers: {'Content-Type': "multipart/form-data, charset=UTF-8"},
             params: {
               account: this.account,
-              psd: this.psd
+              psd: this.psd,
+              code: this.code
             },
-            data: JSON,
           }).then((res) => {
-            this.getCode();
-            if (res.data.msg) {//可以登录,再查看是否被超级管理员激活
-              let name = this.account;
-              axios({
-                url: '/lw/superAdmin/wheCanUs',
-                method: 'post',
-                params: {
-                  account: this.account,
-                  psd: this.psd
-                }
-              }).then((res) => {
-                if (res.data.msg) {
-                  if (res.data.can) {
-                    sessionStorage.setItem("admin", this.account);
-                    router.push({
-                      path: '/justtaCK'
-                    })
-                  } else {
-                    sessionStorage.setItem("register_admin", name);
-                    router.push({
-                      path: '/wait'
-                    })
+            if (res.data.code === undefined) {
+              if (res.data.msg) {
+                let name = this.account;
+                axios({
+                  url: '/lw/superAdmin/wheCanUs',
+                  method: 'post',
+                  params: {
+                    account: name,
+                    psd: this.psd
                   }
-                } else {
-                  ElNotification({
-                    title: '警告',
-                    message: '账号或密码输入不规范!',
-                    type: 'error'
-                  })
-                }
-              })
-              clearInterval(times);
-              this.login = false;
-              this.account = '';
-              this.psd = '';
-              this.NewCode = '';
-              this.getCode();
-            } else if (res.data.msg === false) {
+                }).then((resA) => {//可以登录,再查看是否被超级管理员激活
+                  if (resA.data.msg) {
+                    if (resA.data.can) {
+                      this.Code();
+                      this.account = '';
+                      this.psd = '';
+                      this.code = '';
+                      this.Code();
+                      sessionStorage.setItem("admin", name);
+                      router.push({
+                        path: '/justtaCK'
+                      })
+                    } else {
+                      this.Code();
+                      sessionStorage.setItem("register_admin", name);
+                      router.push({
+                        path: '/wait'
+                      })
+                    }
+                  } else {
+                    ElNotification({
+                      title: '警告',
+                      message: '账号或密码输入不规范!',
+                      type: 'error'
+                    });
+                    this.Code();
+                  }
+                });
+              } else {
+                ElNotification({
+                  title: '错误',
+                  message: '账号或密码错误!',
+                  type: 'error',
+                })
+                this.Code();
+              }
+            } else if (res.data.code === "again") {
               ElNotification({
-                title: '错误',
-                message: '账号或密码错误!',
-                type: 'error',
+                title: '提示',
+                message: '请重新获取验证码!',
+                type: 'warning'
               })
+            } else if (res.data.code === false) {
+              ElNotification({
+                title: '提示',
+                message: '验证码错误!',
+                type: 'warning'
+              });
+              this.Code();
             }
           }).catch(() => {
             ElNotification({
@@ -223,27 +244,22 @@ export default {
               type: 'info',
             })
           })
-        } else {
-          ElNotification({
-            title: '提示',
-            message: '验证码错误!',
-            type: 'info',
-          })
         }
         clearInterval(times);
         this.login = false;
       }, 1200)
 
     },
-    getCode() {
+    Code() {
       this.haveCode = true;
-      axios.get('/lw/user/newCode').then((res) => {
-        this.NewCode = res.data;
-      });
-      const time = setInterval(() => {
-        this.haveCode = false;
-        clearInterval(time)
-      }, 1100);
+      axios({
+        url: '/lw/user/getAdminCode',
+        method: 'post',
+        responseType: "blob"
+      }).then((res) => {
+        this.codeImage = window.URL.createObjectURL(res.data);
+      })
+      this.haveCode = false;
     },
     getMustKnow() {
       axios.post('/lw/user/mustKnow').then((res) => {

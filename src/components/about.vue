@@ -1,75 +1,54 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-header style="padding: 0;height: 59px;">
-        <el-menu
-            :default-active="activeIndex"
-            class="el-menu-demo"
-            mode="horizontal"
-            :ellipsis="false"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b"
-        >
-          <el-menu-item style="width: 150px;font-size: 14px;" @click="ToHome">
-            <el-icon size="17">
-              <location/>
-            </el-icon>
-            <span>首页</span>
-          </el-menu-item>
-          <div class="flex-grow" />
-          <el-menu-item index="About" style="width: 150px;font-size: 14px;" @click="About">
-            <span>关于</span>
-            <el-icon size="13" style="color: #409EFF;">
-              <InfoFilled/>
-            </el-icon>
-          </el-menu-item>
-          <el-sub-menu index="Message">
-            <template #title>管理员</template>
-            <el-menu-item index="AddMessage">注册管理员</el-menu-item>
-            <el-menu-item index="TelSuperMessage">
-              <span>联系超级管理员</span>
-              <el-icon size="13">
-                <Phone/>
-              </el-icon>
-            </el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="Personal">
-            <template #title>个人中心</template>
-            <el-menu-item @click="WatchPerInfo">
-              <span>查看个人信息</span>
-              <el-icon size="13" style="color: #409EFF;">
-                <Avatar/>
-              </el-icon>
-            </el-menu-item>
-            <el-menu-item>
-              <span>修改个人信息</span>
-              <el-icon size="13">
-                <Edit/>
-              </el-icon>
-            </el-menu-item>
-            <el-menu-item @click="exit">
-              <span>安全退出</span>
-              <el-icon size="13" style="color: #F56C6C;">
-                <SwitchButton/>
-              </el-icon>
-            </el-menu-item>
-          </el-sub-menu>
-        </el-menu>
-      </el-header>
-
-    </el-container>
+  <div>
+    <div style="width: 92%;display:flex;justify-content: end;margin-top: 20px;">
+      <img src="https://img.tukuppt.com/ad_preview/00/22/48/5c9a446acc798.jpg!/fw/980" alt="uni"
+           style="width: 600px;height: 425px;"/>
+    </div>
+    <div style="width: 92%;margin-top: 50px;margin-left: 20px;">
+      <img src="https://www.bobizs.com/uploads/allimg/200608/1-20060QS246.jpg" alt="uni"
+           style="width: 600px;height: 395px;"/>
+    </div>
+    <div :class="{show:true,show_f:show0}" ref="show0_l" style="width: 92%;display:flex;justify-content: end;">
+      <img src="https://pic.ntimg.cn/file/20200623/29652875_181128373035_2.jpg" alt="uni"
+           style="width: 600px;height: 395px;"/>
+    </div>
+    <div :class="{show:true,show_f:show1}" ref="show1_l" style="width: 92%;margin-top: 50px;margin-left: 20px;">
+      <img src="https://help.zhaobiao.cn/image/help/s_ydyrgkf.png" alt="uni" style="width: 600px;height: 395px;"/>
+    </div>
+    <div :class="{secound_f:true,secound:show2}" ref="show2_l"
+         style="width: 92%;display:flex;justify-content: end;margin-top: 50px;">
+      <img src="https://img.zcool.cn/community/01ac5f5d4aa7a5a8012187f4e57fe2.jpg@1280w_1l_2o_100sh.jpg" alt="uni"
+           style="width: 650px;height: 395px;"/>
+    </div>
+    <div :class="{secound_f:true,secound:show3}" ref="show3_l" style="width: 92%;margin-top: 50px;margin-left: 20px;">
+      <img src="https://img.zcool.cn/community/01f17e554300770000019ae9d63e2e.jpg@1280w_1l_2o_100sh.jpg" alt="uni"
+           style="width: 650px;height: 395px;"/>
+    </div>
+    <div :class="{show:true,show_f:show4}" ref="show4_l"
+         style="width: 92%;display:flex;justify-content: end;margin-top: 50px;">
+      <img src="https://img.51miz.com/Photo/2017/06/18/14/P756487_b1b4e7fc58a3d4c7c449ef414d8c814e.jpg" alt="uni"
+           style="width: 600px;height: 395px;"/>
+    </div>
+    <el-affix position="bottom" :offset="30">
+      <el-button type="primary" style="position: relative;left: 30px;" @click="back">返回</el-button>
+    </el-affix>
   </div>
 </template>
-
 <script>
+
 import router from "@/router/router";
+import {ElNotification} from "element-plus";
 
 export default {
   name: "about_lw",
   data() {
     return {
-      activeIndex: 'About',
+      show0: true,
+      show1: true,
+      show2: true,
+      show3: true,
+      show4: true,
+
     }
   },
   mounted() {
@@ -79,37 +58,39 @@ export default {
       })
     } else if (sessionStorage.getItem("admin") === null) {
       this.exit();
+    } else {
+      this.outTime();
+      window.addEventListener('scroll', this.handleScroll);
     }
+
   },
   methods: {
     whe_iphone() {
-      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
-      return flag;
+      return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
     },
-    ToHome() {
-      router.push({
-        path: '/justtaCK'
-      })
+    back() {
+      router.back();
     },
-    WatchPerInfo() {
-      router.push({
-        path: '/personal'
-      })
-    },
-    About() {
-      router.push({
-        path: '/about'
-      })
+    outTime() {
+      let times = 0;
+      let wheClear = setInterval(() => {
+        if (times >= 1800) {
+          sessionStorage.clear();
+          ElNotification({
+            title: '提示',
+            message: '身份过期,请重新登录！',
+            type: 'info',
+            duration: 0
+          });
+          this.exit();
+          clearInterval(wheClear);
+        }
+        times++;
+      }, 1000);
     },
     exit() {
-      sessionStorage.clear();
       router.replace({
         path: '/'
-      })
-    },
-    to_register() {
-      router.push({
-        path: '/register'
       })
     },
 
@@ -118,16 +99,5 @@ export default {
 </script>
 
 <style scoped>
-.common-layout {
-  width: 100%;
-  height: 100%;
-}
 
-.el-container {
-  height: 100%;
-}
-
-.flex-grow {
-  flex-grow: 1;
-}
 </style>

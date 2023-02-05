@@ -117,9 +117,8 @@ export default {
     if (sessionStorage.getItem("register_admin") === null) {
       this.exit();
     } else {
-      this.getWaitLook();
       this.getNotice();
-      this.getLooked();
+      this.outTime();//半个小时的登录时间,刷新可重新开始计时
     }
     window.onresize = () => {
       let allHei = document.documentElement.clientHeight;
@@ -142,9 +141,7 @@ export default {
             type: 'warning'
           })
         } else {
-          this.getWaitLook();
           this.getNotice();
-          this.getLooked();
         }
       }).catch(() => {
         ElNotification({
@@ -153,6 +150,23 @@ export default {
           type: 'error'
         })
       })
+    },
+    outTime() {
+      let times = 0;
+      let wheClear = setInterval(() => {
+        if (times >= 1800) {
+          sessionStorage.clear();
+          ElNotification({
+            title: '提示',
+            message: '身份过期,请重新登录！',
+            type: 'info',
+            duration: 0
+          });
+          this.exit();
+          clearInterval(wheClear);
+        }
+        times++;
+      }, 1000);
     },
     wheHaveNewNotice() {
       this.haveNewNotice = false;
@@ -165,41 +179,17 @@ export default {
         }
       }
     },
-    getWaitLook() {
-      axios({
-        url: '/lw/notice/waitLook',
-        method: 'post',
-        params: {
-          account: this.name
-        }
-      }).then((res) => {
-        this.haveData_waitLook = res.data;
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
-    getLooked() {
-      axios({
-        url: '/lw/notice/Looked',
-        method: 'post',
-        params: {
-          account: this.name
-        }
-      }).then((res) => {
-        this.haveData_Looked = res.data;
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
     getNotice() {
       axios({
-        url: '/lw/notice/notice',
+        url: '/lw/notice/allNotice',
         method: 'post',
         params: {
           account: this.name
         }
       }).then((res) => {
-        this.haveData_nedNotice = res.data;
+        this.haveData_waitLook = res.data[0];
+        this.haveData_Looked = res.data[1];
+        this.haveData_nedNotice = res.data[2];
         this.wheHaveNewNotice();
       }).catch((e) => {
         console.log(e)

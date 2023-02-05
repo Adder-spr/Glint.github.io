@@ -3,11 +3,14 @@ import home from "@/components/home";
 import login from "@/components/login_lw";
 import about from "@/components/about";
 import personal from "@/components/personal_lw";
+import personal_change from '@/components/changePerInfo';
 import register_lw from "@/components/register_lw";
 import Terminal from "@/components/backFace";
 import wait from '@/components/wait';
-import sendNotice from '@/components/LWSA_sendNotice';
-import iphone_face from '@/components/iphone_face';
+import admin_sendNotice from '@/components/admin_sendNotice';
+import admin_changeNotice from '@/components/admin_changeNotice';
+import iphone_face from '@/components/phone_face';
+import ipone_main from "@/components/phone_main";
 
 const routes = [
     {
@@ -31,6 +34,11 @@ const routes = [
         component: personal
     },
     {
+        path: '/changePerInfo',
+        name: 'changeInfo',
+        component: personal_change
+    },
+    {
         path: '/about',
         name: 'about',
         component: about,
@@ -46,14 +54,24 @@ const routes = [
         component: register_lw
     },
     {
-        path: '/superSendNotice',
+        path: '/admin_sendNotice',
         name: 'sendNotice',
-        component: sendNotice
+        component: admin_sendNotice
+    },
+    {
+        path: '/admin_changeNotice',
+        name: 'adminMessageNotice',
+        component: admin_changeNotice
     },
     {
         path: '/phone',
         name: 'phone_login',
         component: iphone_face
+    },
+    {
+        path: '/phoneMain?suFtty=' + Math.floor(Math.random() * 12000) + '&ptf==',
+        name: 'phone_main',
+        component: ipone_main
     }
 
 ]
@@ -62,5 +80,6 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
+
 
 export default router;

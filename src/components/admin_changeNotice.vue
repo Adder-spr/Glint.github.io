@@ -4,7 +4,7 @@
       <el-menu default-active="1" style="width: 130px;">
         <el-menu-item index="0" @click="toSendNotice">发送通知</el-menu-item>
         <el-menu-item index="1">修改通知</el-menu-item>
-        <el-menu-item index="2">审核请求</el-menu-item>
+        <el-menu-item index="2" @click="toReviewReq">审核请求</el-menu-item>
         <el-menu-item index="3">用户管理</el-menu-item>
       </el-menu>
     </div>
@@ -283,6 +283,11 @@ export default {
     toSendNotice() {
       router.push({
         path: '/admin_sendNotice'
+      })
+    },
+    toReviewReq() {
+      router.push({
+        path: '/admin_review_req'
       })
     },
     outTime() {

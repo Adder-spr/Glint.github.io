@@ -1,5 +1,9 @@
 <template>
-  <div>phone_main</div>
+  <div style="display:flex;justify-content: center;">
+    <el-link href="">phone_main</el-link>
+    <h1>404</h1>
+    <h3>not found</h3>
+  </div>
 </template>
 
 <script>

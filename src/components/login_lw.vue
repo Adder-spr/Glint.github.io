@@ -8,14 +8,14 @@
         <el-divider direction="vertical" border-style="dashed" style="height: 30px;"/>
         <span style="font-family: 楷体,serif;font-size:18px;color: darkturquoise;">LW</span>
         <el-divider direction="vertical" border-style="dashed" style="height: 30px;"/>
-        <span style="font-family: 楷体,serif;font-size:18px;color: burlywood;">管理员系统</span>
+        <span style="font-family: 楷体,serif;font-size:18px;color: burlywood;">PC系统</span>
       </el-header>
       <el-container>
         <div style="width: 50%;">
           <el-card class="box-card">
             <div class="text item">
                 <span
-                    style="font-size: 20px;font-family:楷体,serif;font-weight: 600;flex-wrap: wrap;">Admin 须知条款：</span><br>
+                    style="font-size: 20px;font-family:楷体,serif;font-weight: 600;flex-wrap: wrap;">用户须知条款：</span><br>
               <el-link style="margin-left: 25px;margin-top: 5px;color: aqua;" v-for="(v,i) in login_must_know"
                        :key="i" :href="v.src">
                 <span>{{ v.info }}</span>
@@ -26,33 +26,70 @@
             </div>
           </el-card>
         </div>
-        <div style="width: 50%;display: flex;justify-content: center;">
+        <div style="width: 50%;display: flex;justify-content: center;align-items: center;">
           <div
               v-loading="login"
               element-loading-text="Login..."
-              style="width: 230px;height: 330px;position: relative;" ref="login_bod">
-            <el-input v-model="account" clearable :prefix-icon="User" placeholder="账号"></el-input>
-            <el-input v-model="psd" type="password" show-password style="margin-top: 15px;" :prefix-icon="Lock"
-                      clearable placeholder="密码"></el-input>
-            <div style="margin-top: 15px;display: flex;flex-direction: row;">
-              <el-input v-model="code" :prefix-icon="Check" style="margin-right: 20px;" placeholder="验证码"></el-input>
-              <el-image v-loading="haveCode" style="width: 150px;border: 1px solid black;" :src="codeImage" alt="验证码"
-                        :fit="'scale-down'" @click="Code"></el-image>
-            </div>
-            <div style="display: flex;flex-direction: row;height: 15px;margin-bottom: 10px;">
-              <el-checkbox v-model="agree" size="default" style="margin-top: 1px;"></el-checkbox>
-              <span style="font-size: 10px;line-height: 35px;height: 15px;">我已阅读，并同意</span>
-              <el-link style="font-size: 7px;height: 15px;margin-top: 10px;margin-left: 3px;" :underline="false">Admin
-                须知条款
-              </el-link>
-            </div>
-            <el-button type="primary" plain @click="log_in" style="margin-top: 15px;width: 230px;">登录</el-button>
-            <el-link href="/register" style="position:relative;left:78%;top: 5px;width: 37px;">
-              <span style="font-size: 10px;">注册</span>
-              <el-icon size="13">
-                <Right/>
-              </el-icon>
-            </el-link>
+              style="width: 251px;height: 360px;position: relative;" ref="login_bod">
+            <el-tabs v-model="login_type" @tab-click="choice_tole" type="border-card" style="width: 249px;">
+              <el-tab-pane label="用户" name="user">
+                <el-input v-model="account" clearable :prefix-icon="User" placeholder="账号"></el-input>
+                <el-input v-model="psd" type="password" show-password style="margin-top: 15px;" :prefix-icon="Lock"
+                          clearable placeholder="密码"></el-input>
+                <div style="margin-top: 15px;display: flex;flex-direction: row;">
+                  <el-input v-model="code" :prefix-icon="Check" style="margin-right: 20px;"
+                            placeholder="验证码"></el-input>
+                  <el-image v-loading="haveCode" style="width: 150px;border: 1px solid black;" :src="codeImage"
+                            alt="验证码"
+                            :fit="'scale-down'" @click="Code"></el-image>
+                </div>
+                <div style="display: flex;flex-direction: row;height: 15px;margin-bottom: 10px;">
+                  <el-checkbox v-model="agree" size="default" style="margin-top: 1px;"></el-checkbox>
+                  <span style="font-size: 10px;line-height: 35px;height: 15px;">我已阅读，并同意</span>
+                  <el-link style="font-size: 7px;height: 15px;margin-top: 10px;margin-left: 3px;" :underline="false">
+                    用户须知条款
+                  </el-link>
+                </div>
+                <el-button type="primary" plain @click="log_in" style="margin-top: 15px;width: 210px;">用户登录
+                </el-button>
+                <el-link href="/register" style="position:relative;left:78%;width: 37px;">
+                  <span style="font-size: 10px;">注册</span>
+                  <el-icon size="13">
+                    <Right/>
+                  </el-icon>
+                </el-link>
+              </el-tab-pane>
+              <el-tab-pane label="管理员" name="admin">
+                <el-input v-model="account" clearable :prefix-icon="Avatar" placeholder="账号"></el-input>
+                <el-input v-model="psd" type="password" show-password style="margin-top: 15px;" :prefix-icon="Lock"
+                          clearable placeholder="密码"></el-input>
+                <div style="margin-top: 15px;display: flex;flex-direction: row;">
+                  <el-input v-model="code" :prefix-icon="Check" style="margin-right: 20px;"
+                            placeholder="验证码"></el-input>
+                  <el-image v-loading="haveCode" style="width: 150px;border: 1px solid black;" :src="codeImage"
+                            alt="验证码"
+                            :fit="'scale-down'" @click="Code"></el-image>
+                </div>
+                <div style="display: flex;flex-direction: row;height: 15px;margin-bottom: 10px;">
+                  <el-checkbox v-model="agree" size="default" style="margin-top: 1px;"></el-checkbox>
+                  <span style="font-size: 10px;line-height: 35px;height: 15px;">我已阅读，并同意</span>
+                  <el-link style="font-size: 7px;height: 15px;margin-top: 10px;margin-left: 3px;" :underline="false">管理员
+                    须知条款
+                  </el-link>
+                </div>
+                <el-button type="primary" plain @click="log_in" style="margin-top: 15px;width: 210px;">管理员登录
+                </el-button>
+                <el-link href="/register" style="position:relative;left:78%;top: 0;width: 37px;">
+                  <span style="font-size: 10px;">注册</span>
+                  <el-icon size="13">
+                    <Right/>
+                  </el-icon>
+                </el-link>
+              </el-tab-pane>
+              <el-tab-pane label="扫码登录" name="Scan" style="border-radius: 0;">
+                二维码
+              </el-tab-pane>
+            </el-tabs>
             <el-divider content-position="left">
               <el-icon size="15" style="color: deepskyblue;">
                 <Key/>
@@ -91,7 +128,7 @@
 </template>
 
 <script setup>
-import {Check, Key, Lock, Right, User} from "@element-plus/icons-vue"</script>
+import {Avatar, Check, Key, Lock, Right, User} from "@element-plus/icons-vue"</script>
 
 <script>
 import axios from "axios";
@@ -114,7 +151,7 @@ export default {
       login: false,
       codeImage: '',
       agree: false,
-
+      login_type: 'user',
 
     }
   },
@@ -126,26 +163,35 @@ export default {
     } else {
       sessionStorage.clear();
     }
-    this.Login_adoptScreen();
-    window.onresize = () => {
-      this.Login_adoptScreen();
-    }
   },
   methods: {
     whe_iphone() {
       return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
     },
-    Login_adoptScreen() {
-      let allHei = document.documentElement.clientHeight;
-      let headHei = document.getElementById("head").clientHeight;
-      if (allHei >= (headHei + 330)) {
-        let Hei = (allHei - (headHei + 330)) / 2;
-        this.$refs.login_bod.style.top = Hei + "px";
-      }
+    choice_tole(e) {
+      this.login_type = e.props.name;
+      this.clear();
+    },
+    clear() {
+      this.account = '';
+      this.psd = '';
+      this.code = '';
+      this.Code();
     },
     log_in() {
       this.login = true;
       let canSe = (this.account.indexOf('"') + this.account.indexOf("'") + this.account.indexOf('`') + this.psd.indexOf('"') + this.psd.indexOf("'") + this.psd.indexOf('`')) > -6;
+      let url = () => {
+        if (this.login_type === "user") return '/lw/user/login';
+        else return '/lw/user/adLogin';
+      };
+      let after_url = () => {
+        if (this.login_type === "user") {
+          return '/user_M';
+        } else if (this.login_type === "admin") {
+          return '/justtaCK';
+        } else return '/404';
+      };
       let times = setInterval(() => {
         if (!this.agree) {
           ElNotification({
@@ -169,7 +215,7 @@ export default {
           this.Code();
         } else {
           axios({
-            url: '/lw/user/login',
+            url: url(),
             method: "post",
             params: {
               account: this.account,
@@ -177,27 +223,30 @@ export default {
               code: this.code
             },
           }).then((res) => {
-            if (res.data.code === undefined) {
+            if (res.data.code === "null") {
               if (res.data.msg) {
                 let name = this.account;
-                axios({
+                let type = this.login_type;
+                let token = res.headers.token;
+                axios({//可以登录,再查看是否被超级管理员激活
                   url: '/lw/superAdmin/wheCanUs',
                   method: 'post',
                   params: {
                     account: name,
                     psd: this.psd
                   }
-                }).then((resA) => {//可以登录,再查看是否被超级管理员激活
+                }).then((resA) => {
                   if (resA.data.msg) {
                     if (resA.data.can) {
-                      this.Code();
-                      this.account = '';
-                      this.psd = '';
-                      this.code = '';
-                      this.Code();
-                      sessionStorage.setItem("admin", name);
+                      if (type === "user") {
+                        sessionStorage.setItem("user", name)
+                      } else {
+                        sessionStorage.setItem("admin", name)
+                      }
+                      sessionStorage.setItem("token", token)
+                      this.clear();
                       router.push({
-                        path: '/justtaCK'
+                        path: after_url()
                       })
                     } else {
                       this.Code();
@@ -229,7 +278,7 @@ export default {
                 message: '请重新获取验证码!',
                 type: 'warning'
               })
-            } else if (res.data.code === false) {
+            } else if (res.data.code === "false") {
               ElNotification({
                 title: '提示',
                 message: '验证码错误!',

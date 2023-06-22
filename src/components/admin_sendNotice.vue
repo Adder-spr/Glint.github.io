@@ -4,7 +4,7 @@
       <el-menu default-active="0" style="width: 130px;height: 100%;">
         <el-menu-item index="0">发送通知</el-menu-item>
         <el-menu-item index="1" @click="toChangeNotice">修改通知</el-menu-item>
-        <el-menu-item index="2">审核请求</el-menu-item>
+        <el-menu-item index="2" @click="toReviewReq">审核请求</el-menu-item>
         <el-menu-item index="3">用户管理</el-menu-item>
 
       </el-menu>
@@ -43,7 +43,7 @@
         <div style="width: 45%;margin-right: 3%;">
           <el-input v-model="search_us" placeholder="查找用户">
             <template #prepend>
-              <el-button :icon="Search" @click="search"/>
+              <el-button :icon="Search" @click="search_user"/>
             </template>
           </el-input>
           <div style="justify-content: center;display:flex;flex-direction: column;">
@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import {Position, Promotion} from '@element-plus/icons-vue';</script>
+import {Position, Promotion, Search} from '@element-plus/icons-vue';</script>
 <script>
 import axios from "axios";
 import {ElNotification} from "element-plus";
@@ -97,6 +97,11 @@ export default {
     toChangeNotice() {
       router.push({
         path: '/admin_changeNotice'
+      })
+    },
+    toReviewReq() {
+      router.push({
+        path: '/admin_review_req'
       })
     },
     getSend_us() {
@@ -201,7 +206,7 @@ export default {
         })
       }
     },
-    search() {//实现发送通知模块的用户查找显示
+    search_user() {//实现发送通知模块的用户查找显示
       this.showUs = [];
       if (this.search_us === '') {
         this.showUs = this.allUs;

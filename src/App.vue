@@ -17,7 +17,7 @@
         hoverMode="grab"
         :clickEffect="true"
         clickMode="push"
-        style="z-index:-1;"
+        style="z-index:-1;width: 100%;height: 99%;"
     >
     </vue-particles>
     <router-view/>

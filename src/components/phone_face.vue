@@ -120,7 +120,7 @@ export default {
             code: this.code
           }
         }).then((res) => {
-          if (res.data.code === undefined) {
+          if (res.data.code === "null") {
             if (res.data.msg) {
               this.user = '';
               this.psd = '';

@@ -79,6 +79,7 @@
                       :show-file-list="false"
                       accept=".jpg,.jpeg,.png"
                       :before-upload="beforeUpload"
+                      :headers="{'token':token}"
                   >
                     <template #trigger>
                       <el-link :underline="false">
@@ -155,9 +156,17 @@ export default {
   name: "personal_lw",
   data() {
     return {
-      selfInfo: {},
+      selfInfo: {
+        account: null,
+        sex: null,
+        age: null,
+        email: null,
+        tel: null,
+        location: null,
+      },
       headImage: null,
       admin_name: sessionStorage.getItem("admin"),
+      token: sessionStorage.getItem("token"),
     }
   },
   mounted() {
@@ -205,6 +214,9 @@ export default {
           account: sessionStorage.getItem("admin")
         },
         responseType: 'blob',
+        headers: {
+          'token': sessionStorage.getItem("token")
+        },
       }).then((res) => {
         // console.log(res.data)
         this.headImage = window.URL.createObjectURL(res.data);
@@ -216,9 +228,12 @@ export default {
         method: 'post',
         params: {
           account: sessionStorage.getItem("admin")
-        }
+        },
+        headers: {
+          'token': sessionStorage.getItem("token")
+        },
       }).then((res) => {
-        this.selfInfo = res.data[0];
+        this.selfInfo = res.data;
       })
     },
     whe_iphone() {

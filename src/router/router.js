@@ -11,6 +11,8 @@ import admin_sendNotice from '@/components/admin_sendNotice';
 import admin_changeNotice from '@/components/admin_changeNotice';
 import iphone_face from '@/components/phone_face';
 import ipone_main from "@/components/phone_main";
+import review_req from "@/components/admin_review_req";
+import user_amin from "@/components/user_main";
 
 const routes = [
     {
@@ -69,9 +71,19 @@ const routes = [
         component: iphone_face
     },
     {
-        path: '/phoneMain?suFtty=' + Math.floor(Math.random() * 12000) + '&ptf==',
+        path: '/phoneMain',
         name: 'phone_main',
         component: ipone_main
+    },
+    {
+        path: '/admin_review_req',
+        name: 'adminReview_req',
+        component: review_req
+    },
+    {
+        path: '/user_M',
+        name: 'user_main',
+        component: user_amin
     }
 
 ]

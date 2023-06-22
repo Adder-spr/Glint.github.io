@@ -98,12 +98,12 @@
             <el-table-column prop="sex" label="性别" width="80px"/>
             <el-table-column fixed="right" label="操作" width="180px">
               <template #default="admin">
-                <el-tag v-if="tableData[admin.$index].admin === '1'">管理员</el-tag>
+                <el-tag v-if="tableData[admin.$index].admin === 1">管理员</el-tag>
                 <el-tag class="ml-2" type="danger" style="margin-left: 5px;"
-                        v-if="tableData[admin.$index].admin === '1'">Only Read
+                        v-if="tableData[admin.$index].admin === 1">Only Read
                 </el-tag>
                 <el-button
-                    v-if="tableData[admin.$index].admin === '0'"
+                    v-if="tableData[admin.$index].admin === 0"
                     type="primary"
                     plain
                     size="small"
@@ -192,9 +192,17 @@ export default {
         method: 'post',
         params: {
           account: sessionStorage.getItem("admin")
-        }
+        },
+        headers: {
+          'token': sessionStorage.getItem("token")
+        },
       }).then((res) => {
-        this.tableData = res.data;
+        if (res.data.msg != null) {
+          alert(res.data.msg)
+          this.Exit();
+        } else {
+          this.tableData = res.data;
+        }
       });
     },
     outTime() {
@@ -229,8 +237,7 @@ export default {
       }, 1000)
     },
     whe_iphone() {
-      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
-      return flag;
+      return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
     },
   }
 }
